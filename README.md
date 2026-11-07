@@ -43,7 +43,7 @@ Tiene **vista isométrica, interfaz superpuesta al juego, animaciones, efectos y
 
 El registro del combate está oculto por defecto (botón *Registro* arriba).
 
-## Reglas nuevas (todo **propuesto, por confirmar**; los números están en `Config.cs` y `GameData.cs`)
+## Reglas nuevas 
 
 ### Habilidades y pasivas
 - Cada clase tiene **6 habilidades**, **1 pasiva** y un **ataque básico gratis** (tecla `A`, no cuenta entre las 2 elegidas, usa la acción del turno). Cada gato se queda con **2 habilidades** (no hay niveles: siempre 2).
@@ -90,7 +90,7 @@ Hay **50 objetos** en **2 espacios por gato: Cuerpo y Arma** (25 de cada uno). E
 | Veneno | **Envenenado**: 2 de daño al empezar cada turno, 3 turnos. También hay nubes de veneno en el suelo |
 - Algunos enemigos son **débiles** (+50% de daño) o **resisten** (−50%) a un elemento; la previsión del daño lo muestra.
 
-### Fuego amigo (palabra clave)
+### Fuego amigo 
 Los **ataques en área de tus gatos** (cruz, alrededor y bombas) también hieren a **tus otros gatos** que estén dentro, con **la mitad del daño**. Quien lanza no se daña, y los enemigos no se dañan entre sí. El *Amuleto de lealtad* da inmunidad. Aparece como la palabra clave `amigo ½` en las habilidades de área.
 
 ### Terreno y obstáculos
@@ -186,42 +186,7 @@ dotnet run -c Release -- log 2 3 5 luchador,mago,tanque,clerigo   # registro de 
 - `Herramientas/PruebaSonido`: genera los sonidos a WAV y revisa saturación.
 - `Herramientas/compilar.sh`: compila con el compilador de C# directo (útil si `dotnet build` no puede restaurar paquetes).
 
-## Qué sale del documento y qué decidí yo
-Los valores de clases (estadísticas), enemigos y jefes originales, desafíos, objetos, bendiciones, dificultad por mundo, vidas, reserva y cantidad de enemigos por nivel son **los del documento**. Lo demás lo resolví así (**propuesto, por confirmar**):
-
-| Tema | Lo que hice |
-|---|---|
-| Habilidades por clase | Las 6 de cada clase son propuestas mías (partí de la habilidad original de cada clase); costes, rangos y poderes también |
-| Elección de habilidades | Siempre 2 por gato, sin niveles (respondiste "sin preferencia"); al empezar y al desbloquear un gato; 3 opciones al azar; repetir cuesta 3 monedas |
-| Movilidad | Solo cuesta maná y no gasta la acción; Paso sombrío cuesta 3 (no 4) por lo explicado arriba |
-| Pasivas | Las 8 pasivas son inventadas por mí a partir de tus ejemplos (pícaro, cazador, tanque) |
-| Elementos | Fuego, hielo, rayo y veneno con los efectos de la tabla; débiles/resistencias por enemigo |
-| Terreno nuevo | Agua (3 de coste), barro (2), obstáculos rompibles y sus vidas; porcentajes por mundo míos |
-| Dinero | Monedas en el suelo, en cajas y soltadas por enemigos; sirven en la tienda y para repetir habilidades |
-| Enemigos nuevos | Los 9 de la tabla; su reparto por mundo es mío |
-| Mundos jugables | Los 7 (`Config.MundosJugables`); el documento pedía solo uno para el primer prototipo |
-| Vida entre niveles | Se recupera el 50% de la vida máxima al empezar cada nivel; un gato caído revive con eso. Las vidas de la run no se recuperan |
-| Reintentar un nivel | Mismo tablero (misma semilla); se restauran vida, consumibles y bendiciones del inicio del nivel |
-| Turno | Moverse (en varios tramos) y una sola acción: habilidad o consumible, en cualquier orden; las de movilidad no cuentan como acción |
-| Rango y vista | Rango en casillas (sin diagonales); no hay línea de visión |
-| Críticos y heridas | No están (el documento no les da números) |
-| Ataques en área | Dañan solo al bando contrario, salvo el fuego, los barriles y las bombas del gato bomba, que dañan a todos |
-| Enemigos: velocidad | El documento no la da; se deriva del movimiento (v = 2·(mov−1)) para ordenar los turnos |
-| Zonas de 3 casillas | Línea perpendicular a la dirección del lanzador, centrada en la casilla elegida; duran N rondas completas |
-| Jefes 2 y 3 | El documento no da ataque básico: propuse rango 1 poder 4 y 5; Barro cada 3 turnos; los lodos pequeños atacan rango 1 poder 3 |
-| Jefe 7 | Rota Salto, Raíces, Barro, invocar Acosadores, Muros y Tormenta |
-
 ## Resultado de las simulaciones (bot sencillo)
 Con el ataque básico y el movimiento por clase el juego se volvió **mucho más fácil** para el bot (casi 60% de campañas, contra 24,5% antes, antes de añadir niveles de gato y objetos). Para compensar, **subí la vida y el poder de los enemigos de los mundos 2 a 7** (propuesto, por confirmar; `BonusVida` y `BonusPoder` en `GameData.cs`). Con los niveles de gato, los 50 objetos y vida/poder extra en los enemigos, el bot sencillo completa la campaña en **~35%** (80 runs, 7 mundos, 8 clases; la expedición termina en nivel medio ~2,3). **Es solo un ajuste provisional: el balance se hace después de cerrar las mecánicas.** El mundo 1 quedó igual.
 - Los números cambian con un jugador humano (que combina movilidad, empujes, terreno y objetos mejor que el bot); sirven para ver tendencias, no valores finales.
 - Los 199 chequeos del Core pasan (incluye ataque básico, movimiento, anillos y gemas, claves, guardado/carga y que el bot supere el tutorial).
-
-## Límites conocidos
-- La vista **no se probó dentro de Unity**. El núcleo sí se compiló y probó con .NET; la vista solo se comprobó contra una réplica de la API de Unity y con imágenes generadas fuera de Unity.
-- El bot no usa todas las habilidades con la misma inteligencia que un humano (por ejemplo, no planifica combos de empuje a largo plazo); sirve para ver tendencias de balance, no valores finales.
-- No hay árbol de habilidades: 2 por gato al inicio, hasta 4 con los niveles 3 y 6 (más el ataque básico).
-- El mapa del mundo, el menú de desarrollador, la tarjeta de casilla y el tinte azul del ralentizado se escribieron **sin poder ejecutarlos en Unity**.
-- Las descripciones completas siguen generándose solas (largas); en pantalla se ven como palabras clave. Conviene reescribirlas a mano cuando el diseño esté cerrado.
-- El menú de título, el tutorial, el guardado y el clic derecho se escribieron **sin poder ejecutarlos en Unity**: compilan, pero el diseño de las pantallas (tamaños, solapes con otras resoluciones) puede necesitar ajustes.
-- `BotJugador.Equipar` (botón *Equipar solo*) no sabe aprovechar anillos y gemas todavía.
-- Cuando un jefe levanta muros, nunca bloquea el camino por completo, pero puede cambiar mucho la forma del tablero.
