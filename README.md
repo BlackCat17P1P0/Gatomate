@@ -1,4 +1,4 @@
-# Gatomate — prototipo funcional (título de trabajo)
+# Gatomate 
 
 Roguelike táctico de gatos por turnos, hecho a partir del documento "Gatomate: concepto de juego" y de lo que se pidió después (habilidades por gato, movilidad, pasivas, elementos, terrenos, obstáculos, enemigos nuevos, dinero).
 Tiene **vista isométrica, interfaz superpuesta al juego, animaciones, efectos y sonido**, todo generado por código (no hay imágenes ni audios en el proyecto). Las reglas (carpeta `Core`) no dependen de Unity y están probadas fuera de Unity.
